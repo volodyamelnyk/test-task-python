@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  # create-super_user:
+  #   image: test_task
+  #   command: ./manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('your_user', 'your_password')"
+  #   volumes:
+  #     - .:/code
+  #   depends_on:
+  #     - db
+
+  # make-migration:
+  #   image: test_task
+  #   command: python /code/manage.py migrate --noinput
+  #   volumes:
+  #     - .:/code
+  #   depends_on:
+  #     - db
+  # run-migration:
+  #   image: test_task
+  #   command: python /code/manage.py makemigrations --noinput
+  #   volumes:
+  #     - .:/code
+  #   depends_on:
+  #     - db
+
+  web:
+    build: .
+    image: test_task
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
